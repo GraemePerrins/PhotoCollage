@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - CollageStudio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#1d00a5",
+                    "surface-container-high": "#2a2a2a",
+                    "secondary-container": "#00a2e6",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "inverse-on-surface": "#313030",
+                    "surface-container": "#201f1f",
+                    "outline": "#918fa1",
+                    "on-surface": "#e5e2e1",
+                    "on-tertiary-fixed": "#351000",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary-container": "#ffd2be",
+                    "tertiary": "#ffb695",
+                    "on-primary-fixed": "#0f0069",
+                    "surface": "#131313",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-tertiary": "#571f00",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "background": "#131313",
+                    "surface-dim": "#131313",
+                    "on-error": "#690005",
+                    "error": "#ffb4ab",
+                    "on-secondary": "#00344d",
+                    "on-error-container": "#ffdad6",
+                    "primary-container": "#4f46e5",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-low": "#1c1b1b",
+                    "outline-variant": "#464555",
+                    "error-container": "#93000a",
+                    "surface-variant": "#353534",
+                    "inverse-surface": "#e5e2e1",
+                    "secondary": "#89ceff",
+                    "tertiary-fixed-dim": "#ffb695",
+                    "primary-fixed": "#e2dfff",
+                    "on-surface-variant": "#c7c4d8",
+                    "on-tertiary-fixed-variant": "#7b2f00",
+                    "secondary-fixed-dim": "#89ceff",
+                    "inverse-primary": "#4d44e3",
+                    "surface-bright": "#393939",
+                    "on-secondary-fixed": "#001e2f",
+                    "tertiary-container": "#a44100",
+                    "surface-tint": "#c3c0ff",
+                    "on-primary-container": "#dad7ff",
+                    "surface-container-highest": "#353534",
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "tertiary-fixed": "#ffdbcc",
+                    "primary": "#c3c0ff",
+                    "on-secondary-container": "#00344e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-page": "24px",
+                    "workspace-padding": "40px",
+                    "sidebar-width": "260px",
+                    "unit": "4px",
+                    "toolbar-height": "48px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "title-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "display-lg": ["Inter"],
+                    "code-sm": ["JetBrains Mono"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "title-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                    "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                    "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                    "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+                    "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active-indicator {
+            position: absolute;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: #4f46e5;
+        }
+        /* Custom switch for form */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #353534;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: #e5e2e1;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #4f46e5; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .white-border-preview {
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 bottom-0 z-40 w-sidebar-width h-screen border-r border-outline-variant bg-surface-container-low flex flex-col">
+<div class="px-6 py-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">CollageStudio</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 opacity-70">Creative Linux Tool</p>
+</div>
+<nav class="flex-1 mt-4">
+<div class="mb-4">
+<p class="px-6 font-label-caps text-label-caps text-on-surface-variant uppercase mb-2">Navigation</p>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-title-sm text-title-sm">Templates</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+<span class="font-title-sm text-title-sm">My Library</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-title-sm text-title-sm">Recent Collages</span>
+</a>
+<!-- ACTIVE TAB: Settings -->
+<a class="flex items-center gap-3 px-6 py-3 border-l-4 border-primary bg-primary-container/10 text-primary font-bold transition-all relative" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-title-sm text-title-sm">Settings</span>
+</a>
+</div>
+</nav>
+<div class="p-6 mt-auto border-t border-outline-variant">
+<button class="w-full bg-primary-container text-on-primary-container font-title-sm text-title-sm py-3 rounded-xl hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                New Project
+            </button>
+<div class="mt-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a graphic designer in a dark minimalist studio setting with dramatic side lighting. The person is wearing a dark turtleneck and has a focused, creative expression. The background is a soft-focus bookshelf and high-end workstations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa5dSdXqNClhVELoVSGDF4ZRZrCiaJ8PPdTFXW_DJHtAviHq_mzCSQmMvq9Hi9yfEF6HxdSO7aafMpdbQA5yJWYlP63C8_nArsq9L-tzx1qMSzF5GOiHr0q252dfrdCyn0wkIB7ZvYdN6QNn1kPoSylbD9DiQ68ikuTleVPwD0wDcPflBD3dp1RLU4cQgVPYY4EZZrF00wNxAaqk4RHUfxK8qWCaqfAfQxGOH8sr-PeyQOsHPNNsejemJBVIL0LYTvFy6Iyg03I_w-"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-on-surface font-title-sm text-title-sm truncate">Creative User</p>
+<p class="text-on-surface-variant font-label-caps text-label-caps truncate opacity-70">Pro Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas Area -->
+<main class="ml-sidebar-width flex-1 flex flex-col bg-surface overflow-hidden relative">
+<!-- TopAppBar Component -->
+<header class="h-toolbar-height w-full border-b border-outline-variant flex justify-between items-center px-workspace-padding bg-surface-container">
+<div class="flex items-center gap-6">
+<span class="font-headline-md text-headline-md font-bold text-primary">Configuration</span>
+<nav class="flex gap-4">
+<a class="font-title-sm text-title-sm text-primary border-b-2 border-primary pb-1" href="#">Workflow</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<input class="bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-1.5 rounded-full text-body-md focus:outline-none focus:ring-1 focus:ring-primary w-64 transition-all" placeholder="Search settings..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1.5 text-on-surface-variant pointer-events-none" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/30 transition-all rounded-full active:opacity-80">
+<span class="material-symbols-outlined" data-icon="cloud_upload">cloud_upload</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/30 transition-all rounded-full active:opacity-80">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+</div>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<div class="flex gap-2">
+<button class="px-4 py-1.5 text-on-surface border border-outline-variant rounded-lg font-title-sm text-title-sm hover:bg-surface-variant/30 active:opacity-80 transition-all">Preview</button>
+<button class="px-4 py-1.5 bg-primary-container text-on-primary-container rounded-lg font-title-sm text-title-sm hover:brightness-110 active:opacity-80 transition-all">Export</button>
+</div>
+</div>
+</header>
+<!-- Content Scroller -->
+<div class="flex-1 overflow-y-auto p-workspace-padding">
+<div class="max-w-3xl mx-auto space-y-gutter">
+<!-- Section 1: Google Photos -->
+<section class="bg-surface-container-low border border-outline-variant rounded-xl p-6 transition-all hover:border-primary/30">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="cloud_done">cloud_done</span>
+</div>
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">Google Photos Integration</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Status: <span class="text-secondary font-medium">Connected</span> (user@gmail.com)</p>
+</div>
+</div>
+<button class="px-4 py-2 text-error border border-error/30 rounded-lg font-label-caps text-label-caps hover:bg-error/10 transition-colors uppercase">Disconnect</button>
+</div>
+</section>
+<!-- Section 2: Output -->
+<section class="bg-surface-container-low border border-outline-variant rounded-xl p-6">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="folder_open">folder_open</span>
+<h2 class="font-title-sm text-title-sm text-on-surface">Output Destination</h2>
+</div>
+<div class="flex gap-3">
+<div class="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-code-sm text-code-sm text-on-surface-variant flex items-center">
+                            /home/user/Pictures/Collages
+                        </div>
+<button class="px-6 py-3 bg-surface-container-high border border-outline-variant text-on-surface rounded-lg font-title-sm text-title-sm hover:bg-surface-bright transition-all">
+                            Change Folder
+                        </button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-3 opacity-60">Generated collages will be automatically saved to this location with a timestamp.</p>
+</section>
+<!-- Section 3 & 4: Defaults and Borders (Bento-style Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Defaults -->
+<section class="bg-surface-container-low border border-outline-variant rounded-xl p-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="square_foot">square_foot</span>
+<h2 class="font-title-sm text-title-sm text-on-surface">Layout Defaults</h2>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">Default Size</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-lg px-4 py-3 appearance-none focus:ring-1 focus:ring-primary focus:outline-none">
+<option>A4 Paper</option>
+<option>A3 Poster</option>
+<option>Instagram Square (1080x1080)</option>
+<option>Custom Dimension</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">Orientation</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-lg px-4 py-3 appearance-none focus:ring-1 focus:ring-primary focus:outline-none">
+<option>Landscape</option>
+<option>Portrait</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Borders -->
+<section class="bg-surface-container-low border border-outline-variant rounded-xl p-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="border_style">border_style</span>
+<h2 class="font-title-sm text-title-sm text-on-surface">Border Styling</h2>
+</div>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface">Default White Border</span>
+<label class="switch">
+<input checked="" type="checkbox"/>
+<span class="slider"></span>
+</label>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Border Size (mm)</label>
+<span class="font-code-sm text-code-sm text-primary" id="border-val">5.0</span>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" max="20" min="0" oninput="document.getElementById('border-val').innerText = parseFloat(this.value).toFixed(1)" step="0.5" type="range" value="5"/>
+</div>
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-lg border border-outline-variant">
+<div class="w-10 h-10 bg-secondary/20 white-border-preview flex items-center justify-center rounded-sm"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Live Preview Accent</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Appearance Section (Additional) -->
+<section class="bg-surface-container-low border border-outline-variant rounded-xl p-6">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="palette">palette</span>
+<h2 class="font-title-sm text-title-sm text-on-surface">System Appearance</h2>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 p-4 border border-primary bg-primary/5 rounded-xl flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="dark_mode">dark_mode</span>
+<span class="font-label-caps text-label-caps uppercase">Dark Mode</span>
+</button>
+<button class="flex-1 p-4 border border-outline-variant hover:border-on-surface-variant rounded-xl flex flex-col items-center gap-2 opacity-50">
+<span class="material-symbols-outlined" data-icon="light_mode">light_mode</span>
+<span class="font-label-caps text-label-caps uppercase">Light Mode</span>
+</button>
+<button class="flex-1 p-4 border border-outline-variant hover:border-on-surface-variant rounded-xl flex flex-col items-center gap-2 opacity-50">
+<span class="material-symbols-outlined" data-icon="desktop_windows">desktop_windows</span>
+<span class="font-label-caps text-label-caps uppercase">System</span>
+</button>
+</div>
+</section>
+<div class="h-24"></div> <!-- Spacer for footer -->
+</div>
+</div>
+<!-- BottomNavBar Component (The Floating Shell) -->
+<nav class="fixed bottom-0 right-0 left-sidebar-width h-16 bg-surface-container-highest border-t border-outline-variant flex justify-end items-center px-8 gap-4 z-50">
+<button class="text-on-surface-variant border border-outline-variant rounded-xl px-6 py-2 flex items-center gap-2 hover:brightness-110 active:scale-95 transition-all font-label-caps text-label-caps">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                Back
+            </button>
+<button class="text-on-surface-variant border border-outline-variant rounded-xl px-6 py-2 flex items-center gap-2 hover:brightness-110 active:scale-95 transition-all font-label-caps text-label-caps">
+                Next
+                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<div class="w-px h-8 bg-outline-variant mx-2"></div>
+<button class="bg-primary text-on-primary rounded-xl px-8 py-2.5 flex items-center gap-2 hover:brightness-110 active:scale-95 transition-all font-label-caps text-label-caps shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" data-icon="save">save</span>
+                Save Changes
+            </button>
+</nav>
+<!-- Aesthetic Background Elements -->
+<div class="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[240px]" data-icon="settings">settings</span>
+</div>
+</main>
+<script>
+        // Micro-interaction: Subtle parallax on the settings background icon
+        document.addEventListener('mousemove', (e) => {
+            const icon = document.querySelector('.absolute.top-0.right-0');
+            if (icon) {
+                const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+                const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+                icon.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+        });
+    </script>
+</body></html>

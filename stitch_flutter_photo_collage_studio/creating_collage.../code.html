@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CollageStudio - Generation Progress</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+        }
+        .white-border-active {
+            outline: 2px solid #ffffff;
+            outline-offset: -2px;
+        }
+        .dot-grid {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+        @keyframes float-thumbnail {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-40px) rotate(5deg); opacity: 0; }
+        }
+        .animate-float {
+            animation: float-thumbnail 3s ease-in-out infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#1d00a5",
+                        "surface-container-high": "#2a2a2a",
+                        "secondary-container": "#00a2e6",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "inverse-on-surface": "#313030",
+                        "surface-container": "#201f1f",
+                        "outline": "#918fa1",
+                        "on-surface": "#e5e2e1",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-container": "#ffd2be",
+                        "tertiary": "#ffb695",
+                        "on-primary-fixed": "#0f0069",
+                        "surface": "#131313",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-tertiary": "#571f00",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "background": "#131313",
+                        "surface-dim": "#131313",
+                        "on-error": "#690005",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#00344d",
+                        "on-error-container": "#ffdad6",
+                        "primary-container": "#4f46e5",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container-low": "#1c1b1b",
+                        "outline-variant": "#464555",
+                        "error-container": "#93000a",
+                        "surface-variant": "#353534",
+                        "inverse-surface": "#e5e2e1",
+                        "secondary": "#89ceff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface-variant": "#c7c4d8",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "secondary-fixed-dim": "#89ceff",
+                        "inverse-primary": "#4d44e3",
+                        "surface-bright": "#393939",
+                        "on-secondary-fixed": "#001e2f",
+                        "tertiary-container": "#a44100",
+                        "surface-tint": "#c3c0ff",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container-highest": "#353534",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "tertiary-fixed": "#ffdbcc",
+                        "primary": "#c3c0ff",
+                        "on-secondary-container": "#00344e",
+                        "sidebar-width": "260px",
+                        "toolbar-height": "48px"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-page": "24px",
+                        "workspace-padding": "40px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "title-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "code-sm": ["JetBrains Mono"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-white overflow-hidden">
+<!-- Sidebar Shell -->
+<aside class="fixed left-0 top-0 bottom-0 z-40 w-[260px] h-screen border-r border-outline-variant bg-surface-container-low flex flex-col">
+<div class="px-6 py-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">CollageStudio</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Creative Linux Tool</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 border-l-4 border-primary bg-primary-container/10 text-primary font-bold transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-title-sm text-title-sm">Templates</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+<span class="font-title-sm text-title-sm">My Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-title-sm text-title-sm">Recent Collages</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-title-sm text-title-sm">Settings</span>
+</a>
+</nav>
+<div class="p-4 mt-auto">
+<button class="w-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container font-title-sm text-title-sm py-3 rounded-lg active:scale-95 transition-transform duration-100 ease-in-out">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span>New Project</span>
+</button>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="fixed top-0 left-[260px] right-0 h-[48px] bg-surface-container border-b border-outline-variant flex justify-between items-center px-8 z-30">
+<div class="flex items-center gap-6">
+<span class="font-title-sm text-title-sm text-primary border-b-2 border-primary pb-1">Workflow</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="cloud_upload">cloud_upload</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant mx-2"></div>
+<button class="text-on-surface-variant font-title-sm text-title-sm hover:text-on-surface transition-all">Preview</button>
+<button class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded text-title-sm font-title-sm active:opacity-80 transition-all">Export</button>
+<div class="w-8 h-8 rounded-full overflow-hidden ml-2 border border-outline-variant bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A professional close-up headshot of a user profile avatar with a clean, tech-focused aesthetic. The background is a soft, out-of-focus studio setup with cool blue and grey lighting. The user has a modern, minimalist appearance suitable for a high-performance creative software user interface. High-resolution digital portrait photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4yQJ5OgQ7oaRnHLKTD-t74n07ppMvpi53Xj0EzqzzDYclF_fCL_T6tSBAUlsbvGABUTeb5HHPbH74dAw2huATMBzXxCCWVU9pfn0KZ_aaX29LRiFgRI8nKs5LV91tjp2g4NrGo6eZeT6pQk7Kc7GB4RVrxKq1ndNGTW4ysDpRMwBp0xIOpOaA8Wk8fjpHGie0WUqjT9aOtnIX21IEMWGXVJZ8jvIEmXGrIeLto-6xFlWCAYF7s3Uw7mjHZCYmZ5RC9JV_OSpCjC7k"/>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="ml-[260px] mt-[48px] h-[calc(100vh-48px-64px)] relative flex flex-col items-center justify-center dot-grid px-workspace-padding">
+<!-- Focused Progress Visual -->
+<div class="w-full max-w-4xl space-y-12 relative z-10">
+<div class="text-center space-y-2">
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Processing images... 65%</h2>
+<p class="font-title-sm text-title-sm text-secondary">Applying "Throw Down" style to 15 images</p>
+</div>
+<!-- Central Progress Bar System -->
+<div class="relative">
+<div class="h-1 bg-surface-container-highest w-full rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-700 ease-out shadow-[0_0_15px_rgba(195,192,255,0.4)]" style="width: 65%;"></div>
+</div>
+<!-- Technical Readouts -->
+<div class="flex justify-between mt-3 font-code-sm text-code-sm text-on-surface-variant">
+<span>STATUS: RENDERING_COLLAGE</span>
+<span>BUFFER: 4.2GB / 8GB</span>
+<span>ESTIMATED: 12.4s</span>
+</div>
+</div>
+<!-- Visualization Area (Thumbnail Placement) -->
+<div class="h-64 w-full bg-surface-container-lowest/50 border border-outline-variant rounded-xl flex items-center justify-center overflow-hidden relative">
+<!-- Grid background for canvas -->
+<div class="absolute inset-0 opacity-20 dot-grid"></div>
+<!-- Floating Thumbnails Animation -->
+<div class="absolute inset-0 pointer-events-none">
+<!-- Thumbnail 1 -->
+<div class="absolute left-1/4 top-1/2 w-24 h-32 bg-surface-variant border border-on-surface/20 rounded shadow-2xl animate-float white-border-active" style="animation-delay: 0s; left: 15%; top: 60%;">
+<img class="w-full h-full object-cover opacity-60" data-alt="A moody, high-contrast black and white street photograph of a bustling Tokyo intersection at night. Neon signs reflect on wet pavement. Cinematic framing with deep shadows and sharp highlights, styled for a gritty collage aesthetic. Professional film grain and high-resolution texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU7KzR-TFRl7esHHLD0MVXQxAA63wvWcEVYBPdXdCpKP1YjgP2HmS8Y86h5wj2SWIklekE1B9DJkIreTc5JbcSs7SdvVms313V8QItnRx8Gly55PnV0v99CFgs_eABU_zvtgKX1kr0oI_jklJD2V-x49iyM-WGgdaCgZQ1T3wgrmsHIAZvSrwPrRykgdm-ouNXIBFHBsS3znIbtzrZAWjlgKRdkXr2L1lZvJATAPEqfTLML-JPbLua1yXig5KZn3wLSvbEBoLd-uqC"/>
+</div>
+<!-- Thumbnail 2 -->
+<div class="absolute left-1/2 top-1/4 w-32 h-24 bg-surface-variant border border-on-surface/20 rounded shadow-2xl animate-float" style="animation-delay: 1.2s; left: 45%; top: 20%;">
+<img class="w-full h-full object-cover opacity-60" data-alt="An abstract architectural shot of a brutalist concrete building against a stark, deep blue sky. Minimalist composition focusing on geometry, light, and shadow. Sharp edges and rough textures. Designed to look like a selected element for a professional graphic collage." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9T6oUwRka_NV3yufzVirFb3m0GOwKq1ks6hx-4wBaVWtcFFB4_Ck9Rn2hYLFqlq4uZGnGZyTO-LuOyOEW69dRPALIPVSkpkJXMhwgLc-slvy8jSaB8QBm67dtMlAfy6PvZ0hlP6oA1QyjtPzivM6BUtL6bauJwQO2fAIKvIs6sYrbqoTKmALecpEPH7PqLg0nUzYSLE3NLwPZrGjkR41FTpNoH25bCQlWC_7Bg0XFl7P5cx3gee0yAlgdmy3IWzNkW45rawlIMepU"/>
+</div>
+<!-- Thumbnail 3 -->
+<div class="absolute right-1/4 bottom-1/4 w-28 h-28 bg-surface-variant border border-on-surface/20 rounded shadow-2xl animate-float white-border-active" style="animation-delay: 0.5s; right: 20%; bottom: 40%;">
+<img class="w-full h-full object-cover opacity-60" data-alt="Vibrant, saturated close-up of exotic botanical leaves with striking red and green patterns. The lighting is dramatic, high-contrast studio style. The image has a sharp, digital look with professional post-processing, ideal for an artistic collage layout." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3l-3aS6W8jA4Abk5m--vUv_emtctQnf9ZeKthSZhXzpKuiF0fgsPa3aXt3SW6KfcbkDEKAY1TMvJ5zrRAjFXrgSROperf1ceW2EZGGwWYqVCdEfYoBOCmfRyzjc-8MA4EAoRDd7L8mbaj7Hu8OmXv_do8JeSUBjWQiD3SzLbnGlWt2pnFrhUoVNsuG9Sr37XIdFbyOJ1DNXng-CaCWPPN3f6pwagToGoqofFmZ_v_ZyY-J-qrwDh9mil1ZZTCnR9Kozb_ripUC8v3"/>
+</div>
+<!-- Thumbnail 4 -->
+<div class="absolute left-1/3 bottom-1/3 w-20 h-24 bg-surface-variant border border-on-surface/20 rounded shadow-2xl animate-float" style="animation-delay: 2.1s; left: 35%; bottom: 15%;">
+<img class="w-full h-full object-cover opacity-60" data-alt="A minimalist fashion portrait featuring a model in high-concept metallic clothing. The background is a flat, neutral grey. Lighting is hard and direct, creating strong shadows. Stylized and futuristic aesthetic for a modern creative project." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyvxDKkwvD12ZybWgb1O6lkFcSTE8xqc0UqzWJ7VQuZDFyEWbTEJTgl1oeNnkMA6GV9BqjsbN8DE49DUWITtIPIRBhj76fGp3AKvlv4uYx-YZDCRILWfNikgXYqQo_jK4Zl2i6t_iqivY2C8c89MVTwJ7lkQoOwstRUGTZKklOxxeYh5IrhoV3GV9J2V9JeWbLOnqKZguUEFiT8aL7fXvbtlMOEVc_GHDgqB6ESdqvMmyGQhalRGlsDdNChjA0HyNF-maRUtfnWgEA"/>
+</div>
+</div>
+<!-- Processing Core Glow -->
+<div class="relative z-10 text-primary-fixed-dim">
+<span class="material-symbols-outlined text-[64px] animate-pulse" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav Bar - Success/Disabled State -->
+<nav class="fixed bottom-0 right-0 left-[260px] h-16 bg-surface-container-highest flex justify-end items-center px-8 gap-4 z-50 border-t border-outline-variant">
+<button class="text-on-surface-variant border border-outline-variant rounded-xl px-6 py-2 flex items-center gap-2 opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+<span class="font-label-caps text-label-caps">Back</span>
+</button>
+<button class="text-on-surface-variant border border-outline-variant rounded-xl px-6 py-2 flex items-center gap-2 opacity-50 cursor-not-allowed">
+<span class="font-label-caps text-label-caps">Next</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="bg-primary text-on-primary rounded-xl px-6 py-2 flex items-center gap-2 cursor-wait hover:brightness-110 transition-all active:scale-95">
+<span class="material-symbols-outlined animate-spin" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-caps text-label-caps">Generating...</span>
+</button>
+</nav>
+<!-- Micro-interaction Script -->
+<script>
+        // Simulate progress increment
+        let progress = 65;
+        const progressBar = document.querySelector('.bg-gradient-to-r');
+        const progressText = document.querySelector('.font-display-lg');
+        
+        setInterval(() => {
+            if(progress < 99) {
+                progress += Math.random() * 0.5;
+                progressBar.style.width = `${progress}%`;
+                progressText.innerText = `Processing images... ${Math.floor(progress)}%`;
+            }
+        }, 1000);
+    </script>
+</body></html>

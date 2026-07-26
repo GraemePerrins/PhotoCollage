@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CollageStudio - Template Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#1d00a5",
+                    "surface-container-high": "#2a2a2a",
+                    "secondary-container": "#00a2e6",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "inverse-on-surface": "#313030",
+                    "surface-container": "#201f1f",
+                    "outline": "#918fa1",
+                    "on-surface": "#e5e2e1",
+                    "on-tertiary-fixed": "#351000",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary-container": "#ffd2be",
+                    "tertiary": "#ffb695",
+                    "on-primary-fixed": "#0f0069",
+                    "surface": "#131313",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-tertiary": "#571f00",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "background": "#131313",
+                    "surface-dim": "#131313",
+                    "on-error": "#690005",
+                    "error": "#ffb4ab",
+                    "on-secondary": "#00344d",
+                    "on-error-container": "#ffdad6",
+                    "primary-container": "#4f46e5",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-low": "#1c1b1b",
+                    "outline-variant": "#464555",
+                    "error-container": "#93000a",
+                    "surface-variant": "#353534",
+                    "inverse-surface": "#e5e2e1",
+                    "secondary": "#89ceff",
+                    "tertiary-fixed-dim": "#ffb695",
+                    "primary-fixed": "#e2dfff",
+                    "on-surface-variant": "#c7c4d8",
+                    "on-tertiary-fixed-variant": "#7b2f00",
+                    "secondary-fixed-dim": "#89ceff",
+                    "inverse-primary": "#4d44e3",
+                    "surface-bright": "#393939",
+                    "on-secondary-fixed": "#001e2f",
+                    "tertiary-container": "#a44100",
+                    "surface-tint": "#c3c0ff",
+                    "on-primary-container": "#dad7ff",
+                    "surface-container-highest": "#353534",
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "tertiary-fixed": "#ffdbcc",
+                    "primary": "#c3c0ff",
+                    "on-secondary-container": "#00344e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-page": "24px",
+                    "workspace-padding": "40px",
+                    "sidebar-width": "260px",
+                    "unit": "4px",
+                    "toolbar-height": "48px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "title-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "display-lg": ["Inter"],
+                    "code-sm": ["JetBrains Mono"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-surface');
+            overflow-x: hidden;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: theme('colors.surface-container-low');
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-variant');
+        }
+        .white-border-active {
+            outline: 2px solid white;
+            outline-offset: 2px;
+        }
+        .dot-grid {
+            background-image: radial-gradient(circle, theme('colors.outline-variant') 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+        .glass-panel {
+            background: rgba(32, 31, 31, 0.7);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 bottom-0 z-40 w-sidebar-width h-screen border-r border-outline-variant bg-surface-container-low flex flex-col">
+<div class="p-6">
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">CollageStudio</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Creative Linux Tool</p>
+</div>
+<nav class="flex-1 mt-4 px-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 border-l-4 border-primary bg-primary-container/10 text-primary font-bold transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-title-sm text-title-sm">Templates</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="font-title-sm text-title-sm">My Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-title-sm text-title-sm">Recent Collages</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-title-sm text-title-sm">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-outline-variant">
+<button class="w-full bg-primary-container text-on-primary-container py-3 px-4 rounded-lg font-title-sm text-title-sm flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+                New Project
+            </button>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-sidebar-width h-toolbar-height bg-surface-container border-b border-outline-variant z-30 flex justify-between items-center px-workspace-padding">
+<div class="flex items-center gap-6">
+<span class="font-title-sm text-title-sm text-primary border-b-2 border-primary pb-1">Workflow</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex bg-surface-container-high rounded-lg p-1 border border-outline-variant">
+<button class="px-3 py-1 text-label-caps font-label-caps text-on-primary-fixed-variant bg-primary-container/20 rounded">Portrait</button>
+<button class="px-3 py-1 text-label-caps font-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Landscape</button>
+</div>
+<select class="bg-surface-container-high border-outline-variant text-on-surface rounded-lg font-label-caps text-label-caps px-4 py-1.5 focus:ring-primary focus:border-primary">
+<option>A4 Paper</option>
+<option>Instagram Square</option>
+<option>Web Banner</option>
+<option>Custom Size...</option>
+</select>
+<div class="h-6 w-[1px] bg-outline-variant"></div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-all active:opacity-80">cloud_upload</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-all active:opacity-80">help</button>
+<button class="bg-surface-variant/30 text-on-surface px-4 py-1.5 rounded-lg font-title-sm text-title-sm hover:bg-surface-variant transition-all active:opacity-80">Preview</button>
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-title-sm text-title-sm hover:brightness-110 transition-all active:opacity-80">Export</button>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="ml-sidebar-width mt-toolbar-height min-h-screen dot-grid p-workspace-padding pb-32">
+<div class="max-w-6xl mx-auto">
+<div class="mb-10">
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tight mb-2">Select a Template</h2>
+<p class="text-on-surface-variant font-body-md text-body-md max-w-xl">Choose a layout structure for your collage. You can always adjust spacing and borders later in the editor.</p>
+</div>
+<!-- Bento Grid of Templates -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Basic Grid -->
+<div class="md:col-span-4 group cursor-pointer" onclick="selectTemplate(this)">
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden transition-all duration-300 hover:border-primary">
+<div class="h-48 relative overflow-hidden bg-surface-container-highest">
+<div class="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-1 p-4 opacity-80 group-hover:opacity-100 transition-opacity">
+<div class="bg-outline-variant/30 rounded-sm border border-outline-variant/50"></div>
+<div class="bg-outline-variant/30 rounded-sm border border-outline-variant/50"></div>
+<div class="bg-outline-variant/30 rounded-sm border border-outline-variant/50"></div>
+<div class="bg-outline-variant/30 rounded-sm border border-outline-variant/50"></div>
+<div class="bg-outline-variant/30 rounded-sm border border-outline-variant/50"></div>
+<div class="bg-outline-variant/30 rounded-sm border border-outline-variant/50"></div>
+</div>
+</div>
+<div class="p-5">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-1">Basic Grid</h3>
+<p class="text-on-surface-variant text-code-sm font-code-sm">Uniform 3x2 grid layout. Perfect for structured sequences.</p>
+</div>
+</div>
+</div>
+<!-- Random Overlap -->
+<div class="md:col-span-8 group cursor-pointer" onclick="selectTemplate(this)">
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden transition-all duration-300 hover:border-primary white-border-active">
+<div class="h-48 relative bg-surface-container-highest">
+<div class="absolute inset-0 p-4 overflow-hidden">
+<div class="absolute top-4 left-4 w-40 h-32 bg-primary/20 border border-primary/50 rotate-[-5deg] rounded-sm"></div>
+<div class="absolute top-10 right-20 w-48 h-32 bg-secondary/20 border border-secondary/50 rotate-[3deg] rounded-sm"></div>
+<div class="absolute bottom-4 left-1/3 w-56 h-36 bg-tertiary/20 border border-tertiary/50 rotate-[-2deg] rounded-sm"></div>
+</div>
+</div>
+<div class="p-5">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-1">Random Overlap</h3>
+<p class="text-on-surface-variant text-code-sm font-code-sm">Artistic overlapping with randomized rotation and depth layering. Most popular.</p>
+</div>
+</div>
+</div>
+<!-- Throw Down -->
+<div class="md:col-span-6 group cursor-pointer" onclick="selectTemplate(this)">
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden transition-all duration-300 hover:border-primary">
+<div class="h-48 relative bg-surface-container-highest">
+<div class="absolute inset-0 p-4">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-32 h-32 bg-on-surface-variant/20 border border-outline-variant rotate-[15deg]"></div>
+<div class="w-32 h-32 bg-on-surface-variant/20 border border-outline-variant rotate-[-10deg] -ml-16"></div>
+<div class="w-32 h-32 bg-on-surface-variant/20 border border-outline-variant rotate-[5deg] -ml-16 mt-8"></div>
+</div>
+</div>
+</div>
+<div class="p-5">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-1">Throw Down</h3>
+<p class="text-on-surface-variant text-code-sm font-code-sm">Mimics a messy pile of photos dropped onto a desk. Organic and chaotic.</p>
+</div>
+</div>
+</div>
+<!-- Circular Spiral -->
+<div class="md:col-span-6 group cursor-pointer" onclick="selectTemplate(this)">
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden transition-all duration-300 hover:border-primary">
+<div class="h-48 relative bg-surface-container-highest flex items-center justify-center">
+<div class="w-32 h-32 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center">
+<div class="w-20 h-20 rounded-full bg-secondary-container/20 border border-secondary-container/50"></div>
+</div>
+<div class="absolute w-12 h-12 bg-primary/20 border border-primary/50 -mt-20 -ml-20 rounded-full"></div>
+<div class="absolute w-10 h-10 bg-tertiary/20 border border-tertiary/50 mt-20 ml-20 rounded-full"></div>
+</div>
+<div class="p-5">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-1">Circular Spiral</h3>
+<p class="text-on-surface-variant text-code-sm font-code-sm">Radial layout concentrating focus on the center. Dynamic and modern.</p>
+</div>
+</div>
+</div>
+<!-- Tiled Varied -->
+<div class="md:col-span-12 group cursor-pointer" onclick="selectTemplate(this)">
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden transition-all duration-300 hover:border-primary">
+<div class="h-40 relative bg-surface-container-highest p-4">
+<div class="grid grid-cols-4 grid-rows-2 h-full gap-2">
+<div class="col-span-2 row-span-2 bg-on-surface-variant/10 border border-outline-variant/30 rounded"></div>
+<div class="col-span-1 bg-on-surface-variant/10 border border-outline-variant/30 rounded"></div>
+<div class="col-span-1 bg-on-surface-variant/10 border border-outline-variant/30 rounded"></div>
+<div class="col-span-2 bg-on-surface-variant/10 border border-outline-variant/30 rounded"></div>
+</div>
+</div>
+<div class="p-5 flex justify-between items-center">
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-1">Tiled Varied</h3>
+<p class="text-on-surface-variant text-code-sm font-code-sm">Masonry-style layout with variable block sizes. Great for mixing landscape and portrait images.</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">auto_awesome_motion</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<footer class="fixed bottom-0 right-0 left-sidebar-width h-16 bg-surface-container-highest border-t border-outline-variant flex justify-end items-center px-8 gap-4 z-50">
+<button class="text-on-surface-variant border border-outline-variant rounded-xl px-6 py-2 flex items-center gap-2 hover:brightness-110 transition-all active:scale-95">
+<span class="material-symbols-outlined">arrow_back</span>
+<span class="font-label-caps text-label-caps">Back</span>
+</button>
+<button class="text-on-surface-variant border border-outline-variant rounded-xl px-6 py-2 flex items-center gap-2 hover:brightness-110 transition-all active:scale-95">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-label-caps text-label-caps">Generate</span>
+</button>
+<button class="bg-primary text-on-primary rounded-xl px-6 py-2 flex items-center gap-2 hover:brightness-110 transition-all active:scale-95">
+<span class="font-label-caps text-label-caps">Next: Choose Images</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</footer>
+<script>
+        function selectTemplate(element) {
+            // Remove active state from all
+            document.querySelectorAll('.group').forEach(el => {
+                const card = el.querySelector('.bg-surface-container-low');
+                if (card) card.classList.remove('white-border-active');
+            });
+            // Add active state to clicked
+            const activeCard = element.querySelector('.bg-surface-container-low');
+            if (activeCard) activeCard.classList.add('white-border-active');
+        }
+
+        // Micro-interactions for hover effects
+        document.querySelectorAll('.cursor-pointer').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                // Potential subtle haptic-like animation
+            });
+        });
+    </script>
+</body></html>

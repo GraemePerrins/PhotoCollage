@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CollageStudio - My Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --sidebar-width: 260px;
+            --toolbar-height: 48px;
+        }
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+            overflow-hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .white-border-frame {
+            outline: 2px solid #ffffff;
+            outline-offset: -2px;
+        }
+        .dot-grid {
+            background-image: radial-gradient(circle, #353534 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        /* Custom scrollbar for technical look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1c1b1b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #464555;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #918fa1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#1d00a5",
+                      "surface-container-high": "#2a2a2a",
+                      "secondary-container": "#00a2e6",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "inverse-on-surface": "#313030",
+                      "surface-container": "#201f1f",
+                      "outline": "#918fa1",
+                      "on-surface": "#e5e2e1",
+                      "on-tertiary-fixed": "#351000",
+                      "on-background": "#e5e2e1",
+                      "on-tertiary-container": "#ffd2be",
+                      "tertiary": "#ffb695",
+                      "on-primary-fixed": "#0f0069",
+                      "surface": "#131313",
+                      "secondary-fixed": "#c9e6ff",
+                      "on-tertiary": "#571f00",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "background": "#131313",
+                      "surface-dim": "#131313",
+                      "on-error": "#690005",
+                      "error": "#ffb4ab",
+                      "on-secondary": "#00344d",
+                      "on-error-container": "#ffdad6",
+                      "primary-container": "#4f46e5",
+                      "surface-container-lowest": "#0e0e0e",
+                      "surface-container-low": "#1c1b1b",
+                      "outline-variant": "#464555",
+                      "error-container": "#93000a",
+                      "surface-variant": "#353534",
+                      "inverse-surface": "#e5e2e1",
+                      "secondary": "#89ceff",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "primary-fixed": "#e2dfff",
+                      "on-surface-variant": "#c7c4d8",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "secondary-fixed-dim": "#89ceff",
+                      "inverse-primary": "#4d44e3",
+                      "surface-bright": "#393939",
+                      "on-secondary-fixed": "#001e2f",
+                      "tertiary-container": "#a44100",
+                      "surface-tint": "#c3c0ff",
+                      "on-primary-container": "#dad7ff",
+                      "surface-container-highest": "#353534",
+                      "on-secondary-fixed-variant": "#004c6e",
+                      "tertiary-fixed": "#ffdbcc",
+                      "primary": "#c3c0ff",
+                      "on-secondary-container": "#00344e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-page": "24px",
+                      "workspace-padding": "40px",
+                      "sidebar-width": "260px",
+                      "unit": "4px",
+                      "toolbar-height": "48px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "title-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-caps": ["JetBrains Mono"],
+                      "display-lg": ["Inter"],
+                      "code-sm": ["JetBrains Mono"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Sidebar Shell -->
+<aside class="fixed left-0 top-0 bottom-0 z-40 w-sidebar-width h-screen border-r border-outline-variant bg-surface-container-low">
+<div class="p-6">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">CollageStudio</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Creative Linux Tool</p>
+</div>
+<div class="mt-4 px-4">
+<button class="w-full py-2 bg-primary-container text-on-primary-container font-title-sm text-title-sm flex items-center justify-center gap-2 rounded hover:brightness-110 transition-all">
+<span class="material-symbols-outlined">add</span>
+                New Project
+            </button>
+</div>
+<nav class="mt-8">
+<p class="px-6 mb-2 font-label-caps text-label-caps text-outline uppercase tracking-widest">Workspace</p>
+<!-- Inactive/Visited Template Tab -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-title-sm text-title-sm">Templates</span>
+</a>
+<!-- Active My Library Tab -->
+<a class="flex items-center gap-3 px-4 py-3 border-l-4 border-primary bg-primary-container/10 text-primary font-bold transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="photo_library" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+<span class="font-title-sm text-title-sm">My Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-title-sm text-title-sm">Recent Collages</span>
+</a>
+<div class="mt-8">
+<p class="px-6 mb-2 font-label-caps text-label-caps text-outline uppercase tracking-widest">System</p>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-title-sm text-title-sm">Settings</span>
+</a>
+</div>
+</nav>
+<div class="absolute bottom-6 left-6 right-6">
+<div class="flex items-center gap-3 p-2 rounded-lg bg-surface-container-highest/30">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional close-up studio portrait of a digital artist in a dark, minimalist setting with soft purple rim lighting, reflecting the tech-focused and creative Linux brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-9RLlbNy356dkCHxp-bGeeeOvpjL6jciRmEoOVK_QIGGwo1j3w-unNEh4ZijyUyxFHw-oe8GJ4pjeqN2Lwz6cbAUxcemcHp2uqDKNOzmgKCX7R2mDRykj-UypYA62tNpRkBeufEasci4OlZn5oC613eWgAiaIKBWE5a1AdNBpADJawCtuUW5IPjaHfYqMfGFzBzjZ8zw637X73zFa5w-dW9rretgN5FIOV75nbB4PJqaFvICoo_gvoqOb6XKDJXFS2KzK3nrIHtJ_"/>
+</div>
+<div class="overflow-hidden">
+<p class="font-title-sm text-title-sm truncate text-on-surface">Creative User</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant uppercase">Pro Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center px-workspace-padding ml-sidebar-width h-toolbar-height w-[calc(100%-var(--sidebar-width))] border-b border-outline-variant bg-surface-container sticky top-0 z-30">
+<div class="flex items-center gap-6">
+<nav class="flex gap-4">
+<a class="font-title-sm text-title-sm text-primary border-b-2 border-primary pb-1" href="#">Workflow</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant material-symbols-outlined text-[18px]">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded px-10 py-1 text-body-md font-body-md focus:outline-none focus:border-primary transition-all w-64" placeholder="Search photos..." type="text"/>
+</div>
+<button class="p-1 hover:bg-surface-variant/30 rounded transition-all text-on-surface-variant active:opacity-80">
+<span class="material-symbols-outlined">cloud_upload</span>
+</button>
+<button class="p-1 hover:bg-surface-variant/30 rounded transition-all text-on-surface-variant active:opacity-80">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant"></div>
+<button class="px-4 py-1 border border-outline-variant rounded font-title-sm text-title-sm text-on-surface-variant hover:bg-surface-variant/30 transition-all">Preview</button>
+<button class="px-4 py-1 bg-primary-container text-on-primary-container rounded font-title-sm text-title-sm hover:brightness-110 transition-all">Export</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width pb-32 pt-6 px-workspace-padding min-h-screen dot-grid">
+<!-- Google Photos Status Banner -->
+<section class="mb-8">
+<div class="bg-surface-container-high border border-outline-variant rounded-xl p-6 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-6">
+<div class="w-16 h-16 bg-white rounded-lg flex items-center justify-center p-2 shadow-inner">
+<img alt="Google Photos" class="w-full h-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjLuQjWG4RdOyWyPHTqkavqQPfyhdtwd4i6gDLN7JLpzjm-tO2jLrJ-APydZOmoeTAQUuS1r7AJZCu-yqkoRCjKNhZBgvjROVKlt6KlkCPPmNfUhV8zcD_A6_mVhWwZdnWQpC0wU0zMd1KYlEHm-ZApyn3dzyrV_p1DdmMYwtnWn0jkGcL2fuo8Tn0BzeTZ8FkbtPAm3F_Xe48TYeX09hJl9cEL9FlsHku_jiTIANsOwuPeAd9BosEBGzcePZ7QStUURKTnX-2uSH6"/>
+</div>
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">Google Photos Connected</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg">Displaying your recent cloud library. Syncing takes place every 10 minutes in the background for high-performance collage rendering.</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-2 px-3 py-1 bg-secondary-container/20 text-secondary-container text-label-caps font-label-caps rounded-full border border-secondary-container/30">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+                        LIVE SYNC
+                    </span>
+<button class="px-4 py-2 text-on-surface-variant font-label-caps text-label-caps border border-outline-variant rounded hover:bg-surface-variant/30 transition-all">SWITCH ACCOUNT</button>
+</div>
+</div>
+</section><div class="flex gap-8 border-b border-outline-variant mb-8">
+<button class="pb-3 px-2 border-b-2 border-primary text-primary font-title-sm text-title-sm transition-all">
+        All Photos
+    </button>
+<button class="pb-3 px-2 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-all">
+        Albums
+    </button>
+</div>
+<!-- Gallery Header -->
+<div class="mb-12">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Your Albums</h3>
+<p class="font-label-caps text-label-caps text-outline">SELECT ENTIRE COLLECTIONS</p>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<!-- Album Card 1 -->
+<div class="group relative aspect-[4/3] bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden cursor-pointer hover:border-primary transition-all">
+<img alt="Summer 2023" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhodukQXFgXvo1vZppHFsIb8CGJ83rhJV9-kDOpi2PjkUxaNJhZ3xZ1er7D9jJ7_QjJ0amOI4MSn6KbIxzCAj8L5i9DQVnHK3gF44T7Z3mkPaaONYLukjgh2XwclEEEEZZAVHliJv1fn_tcRjeBVfU7R5pO5X_R2z-4vJSQvk5b-S9GjgEuIKqO8LC1qFb3hYPjg2J6wbFjKYJQZ7mu_1Y6sTJx6ZGaL1I4Y30Pli3wNGgwA7CTAGBoFgWT0Qmxo_T5W9MBOdUlEl4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<p class="font-title-sm text-title-sm text-white">Summer 2023</p>
+<p class="font-label-caps text-[10px] text-outline">124 PHOTOS</p>
+</div>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full flex items-center justify-center group-hover:border-primary transition-all">
+<span class="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 text-primary">check</span>
+</div>
+</div>
+<!-- Album Card 2 -->
+<div class="group relative aspect-[4/3] bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden cursor-pointer hover:border-primary transition-all">
+<img alt="Architecture" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-7qAqVh2pRwBFV7ujS6pm5dGl_w9E9fyst510Eim2AjeRGDnbc2b6slKrcf5VWYUv0sUgwCNgRimyNjioXTqOthl-kSBgs4F8EYQnT-lV_bZfbTsuBIWxt7wGhOmTHB3-gcaJBGV6PYoaL9yoANxjF3wJ5ic_T99C-_oCZ9LMNBNDdbrOEh3RhenZJxzyHVYuYk_6qLeztH263tJKw23ki2bz15SMKkSXcUaQmoE7r-XitIiu-l3fpQjd5joFSyG1MAdGYf08OOc7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<p class="font-title-sm text-title-sm text-white">Architecture</p>
+<p class="font-label-caps text-[10px] text-outline">48 PHOTOS</p>
+</div>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full flex items-center justify-center group-hover:border-primary transition-all">
+<span class="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 text-primary">check</span>
+</div>
+</div>
+</div>
+</div><div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Select Photos</h3>
+<p class="font-label-caps text-label-caps text-outline">LATEST UPLOADS FROM CLOUD STORAGE</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant bg-surface-container-low text-on-surface-variant rounded flex items-center gap-2 hover:text-on-surface transition-all">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+<span class="font-label-caps text-label-caps">FILTER</span>
+</button>
+<button class="p-2 border border-outline-variant bg-surface-container-low text-on-surface-variant rounded flex items-center gap-2 hover:text-on-surface transition-all">
+<span class="material-symbols-outlined text-[18px]">sort</span>
+<span class="font-label-caps text-label-caps">DATE</span>
+</button>
+</div>
+</div>
+<!-- Photo Grid (Bento Style Variation) -->
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-gutter">
+<!-- Selected Image -->
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer white-border-frame transition-all duration-300" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A cinematic overhead shot of a dark moody forest in the Pacific Northwest, with thick morning fog rolling between towering pine trees. The aesthetic is cold and high-contrast, perfectly matching a professional creative UI with deep blacks and sharp highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhodukQXFgXvo1vZppHFsIb8CGJ83rhJV9-kDOpi2PjkUxaNJhZ3xZ1er7D9jJ7_QjJ0amOI4MSn6KbIxzCAj8L5i9DQVnHK3gF44T7Z3mkPaaONYLukjgh2XwclEEEEZZAVHliJv1fn_tcRjeBVfU7R5pO5X_R2z-4vJSQvk5b-S9GjgEuIKqO8LC1qFb3hYPjg2J6wbFjKYJQZ7mu_1Y6sTJx6ZGaL1I4Y30Pli3wNGgwA7CTAGBoFgWT0Qmxo_T5W9MBOdUlEl4"/>
+<div class="absolute inset-0 bg-primary/20 pointer-events-none"></div>
+<div class="absolute top-3 right-3 w-6 h-6 bg-primary text-on-primary rounded-full flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+</div>
+<!-- Repeated Grid Items -->
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer hover:border-on-surface transition-all duration-300" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up high-definition architectural photography of a brutalist concrete building with sharp geometric shadows and minimalist composition. The color palette consists of neutral grays and deep shadows, ideal for a modern corporate creative design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSwpwhe7cSpqYbUJI1CYwsFoofMuLfsO-cqISZ1nIV1X2GqYsjiETZStXQ1xx4M8SZ0GlKe8f3R_nVyk2_TzPDVWdkXcTPctYH6gG_OhnalQyUZg0BSOziu9aDwZf5Bo5y_71Mq5lzEmgvLh2Boof18Bihvu6lK2udYwm73jWqSBIhsfMzgg_rgs2gVMDhtNxpUVthXs1tFft216nSmBJyGn4nhostb-OSeLG7lELZpaCc6mUnIAYldffETQjAPLBtQ1mIOKue6-Io"/>
+<div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all"></div>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"></div>
+</div>
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer white-border-frame transition-all duration-300" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="A vibrant macro photograph of high-tech circuit boards with glowing indigo and neon blue light trails. The style is technical and sleek, emphasizing performance and creativity in a Linux desktop environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjkMlq6Anb7RlRrL_OsoUjgQXl4HL8vreLe8Iitlm1GmGpCsZpnynRrBy4QaPR41sVvUdMyYHzFIO6ZpSg2lo0NkiTmLAUKbGReWrQfXLPwLuviHtvlvWjfWFjUoy3sF6T2P_hMyIESYRKftMoCtab0xAUcrIMZVFFQe8R59h9cV3bx58Rx-1duvqJkhlwmVgpmsz2-aCFAcyGmepRhSA_0rynqXXP5NUAlvMPItkoG3sCGvIbBn_TK82wCs1nIwqM1SVI6LC_dKyW"/>
+<div class="absolute inset-0 bg-primary/20 pointer-events-none"></div>
+<div class="absolute top-3 right-3 w-6 h-6 bg-primary text-on-primary rounded-full flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+</div>
+<!-- Larger Featured Card -->
+<div class="group relative md:col-span-2 md:row-span-2 bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer hover:border-on-surface transition-all duration-300" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An expansive aerial landscape of a volcanic black sand beach with turquoise waves crashing against the shore, creating high visual contrast. The moody, dramatic atmosphere aligns with a premium creative software aesthetic using dark slate and vibrant accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-7qAqVh2pRwBFV7ujS6pm5dGl_w9E9fyst510Eim2AjeRGDnbc2b6slKrcf5VWYUv0sUgwCNgRimyNjioXTqOthl-kSBgs4F8EYQnT-lV_bZfbTsuBIWxt7wGhOmTHB3-gcaJBGV6PYoaL9yoANxjF3wJ5ic_T99C-_oCZ9LMNBNDdbrOEh3RhenZJxzyHVYuYk_6qLeztH263tJKw23ki2bz15SMKkSXcUaQmoE7r-XitIiu-l3fpQjd5joFSyG1MAdGYf08OOc7"/>
+<div class="absolute top-4 left-4">
+<span class="bg-black/50 backdrop-blur-md px-2 py-1 rounded text-label-caps font-label-caps text-white border border-white/20">RECENT FEATURED</span>
+</div>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"></div>
+</div>
+<!-- More items to fill grid -->
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer transition-all duration-300" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="A minimalist interior design shot featuring a single Eames lounge chair in a concrete studio with a large window. Soft light falls across the surfaces, creating a calm, focused, and professional atmosphere consistent with high-end creative workflows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyg8fqvStOLRKAAM_XfXwy_Nny-7rqKM4Z8q7Lug3AC2h1ozpZSAYfOJjKmo8l5IWF2MhWP8FEVNQGzH3maOiRPTqRgzWvM96cI93d3tWr7fSfiKjWUGgZwkFBf3PU1Iozsci2IzOD-xC_nLHigqgbJAVKr86iiFSQ_aVlhm97MnXOD74jQLtRaF4mBn4rzw1F9vJCR8mxO89Y9F0TldyUcNd3T0ZKNaU8c3d3JKFCqvxYWeTnAQz6USpXDJyvz9i8FV4dXRqxfYE_"/>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"></div>
+</div>
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer white-border-frame transition-all duration-300" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="Abstract digital render of flowing liquid metal in deep indigo and obsidian. High-gloss reflections and smooth gradients that complement a dark mode professional UI for collage and graphic design tools." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgwPZljVh-Qki3_WxbJWjvc0a7EZlPYOdg8wkKkjEx_TcHWXzvNlAZjQUbJh7cvDB_ZfV630GMFQ7uWGiV-kE0xLPazA2JLMGvnGRMRFrqo2XIfxg8VlESnheVIaxXWaowiMkCqe2mdhmJ_gwuAOHRBQPBP091mq9zWr7_Guaw2uTNFhJ2y0TU9e7-LiII2wsMH8-evy5WXetRnaJfCGMlzbHWV-JRjhNkV1MMqCkVfOEWlbP-U73PjJayfdey2w6iMF-DW9mivGxP"/>
+<div class="absolute inset-0 bg-primary/20 pointer-events-none"></div>
+<div class="absolute top-3 right-3 w-6 h-6 bg-primary text-on-primary rounded-full flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+</div>
+<!-- Repeat 8 more placeholders for a full grid -->
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="Modern geometric sculpture in a public plaza during twilight, illuminated by subtle purple and blue spotlighting. Technical, clean lines and architectural depth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9KWPxQAl8LuIYaRG1x1YtyFv2YYktycygX45aQ8DqyIEzkVBj7zPluKosBK4GMPDuxFhPAmdSqrHkgfPUZBK-iSwjt1USv6jrjzf92InS2HI4WhWve5F6_-ZEvownjfm9nSLHgjGvbyjxXgAbz1MKX9LbnsnW-PmD9YBivTK0FyE_L8IV3NHtMD14cJzRRL_dSkV6ND8ndRPHticZ6-2ROGkU8a8IJOoLwq21n2fEApHYO2SgKFgrsJqtCPED18caiuxrvnQN8C_h"/>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full opacity-0 group-hover:opacity-100"></div>
+</div>
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="A cluster of high-performance server towers in a dark data center, glowing with blue LED indicators. Symbolizes technical efficiency and the Linux environment power." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjrxgrfWc7V3vSD0vFlVf8WA9_efHZXyqpum9-7temmjN_Vn1yKycpzJZKF3wNly7ReS-rz6iv9INvQ5VpC9kLojFsL5g67UQYTuEmG7qZBZdXrTXjy6janSWwud7vzkGkyGtrjKpJCEkele9hhhSFhWGZD7qZ3Y8RgvNtuNXgWlUjVaNFKp83DBodPJeYcLkfpV7np_9qJ2dOSic_IdxZrESG5aYcG7IBc7H1RVjZHFLtSPYwYoYdSNsiU8kw5fLu8HXg8cyjEoL9"/>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full opacity-0 group-hover:opacity-100"></div>
+</div>
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="A clean top-down shot of a designer desk with a mechanical keyboard, a Wacom tablet, and a cup of black coffee. Minimalist and productive mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM0-zBY9SdQrffodqtERr1nUIihUNbdSN5hNT5fgh2hthNxfxu62XUEOF96Hp2ws_K83RHy5369nH1jtyXrMWsl7tPuFAFkHncKxS-VagO3bew2TegkkvpSUwehvn3hiM0SS4Xz2fsjJj-okBgl7mKXnfwn2dRyjt0iU5qyFx0Gqw1kv3vObIfUhBSucXRef97cMk47hBFpnAhfW62ioVvAI0AMLKm-oifx6vqxLqF0p0Wsn7plQYufWt9fFaRbL_m0HqHdm_lNs_3"/>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full opacity-0 group-hover:opacity-100"></div>
+</div>
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="Close-up of a high-end camera lens with complex reflections in the glass. Sharp focus and technical precision represented in the image." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUezisZXnA5JRWSqQq8jrrSm5rvESYSO5YL12y2uCaTXH66wv6K4jil4FD8MiOUEx3h8WpopPj2KHw2ykPuFuhUs9-0uElhh79_gfV43jksAJ3UAp86mP9RC_ccBtU-NG6_LrKiaomSaeYcPuLfdxGk4dJ-BFELHL3S-mleufB7oN1Gy1cJ5iEENvecBE1zshf6AoB5d-Nt5ZnNWnBLVLFL1KxqexebzlygatMk80RvHWfvK0xuI40RZ4JMkkWYjCmnXef4-kiLaFk"/>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full opacity-0 group-hover:opacity-100"></div>
+</div>
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="Macro view of a watch mechanism with intricate gears and springs. Silver and dark metallic tones for a high-performance industrial feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyxlRYJJCTS1VAhqBMhAKqAooGypsxgPyd5K9AxrD7TYPrg6ZaPcqrGZgdoabj7bP3fJC-Oqykk9iswhd2n1-nltkgYJeDzQSTwvIzf4jbh07y83MfVx_-HnrVmIVKjaPZ3zNAnJMgn9CeoU6w2YvPo9goWkaaZauCJ2XRsu8EKLwW5BtHZG_Ds6vBvysXgZEt3tWfrg4FcqiBNnfkpXw1-fe4MSiiiKUzFJaJSLYJ3JRWLyJoJPv7t_zn102Bx83pYCCD5s_UX0cf"/>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full opacity-0 group-hover:opacity-100"></div>
+</div>
+<div class="group relative aspect-square bg-surface-container-lowest border border-outline-variant overflow-hidden cursor-pointer" onclick="toggleSelect(this)">
+<img class="w-full h-full object-cover" data-alt="Aerial view of a complex highway interchange at night with long exposure light trails. Modern urban complexity and flow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx-Zs2xlybVGZ-fCDBgZNlTKAM19UPjp1vfJQcPUoA_gzyfXHiwNpfNX_KbIki4WY2GR9vPk4sv4Fyaw7rBWDVhLV5g8LqN7bh281u3T0tHKyK8KBgyeLNbFnMcjxl5Z9DmGO4xsSjAPWBrznpkLiYk7viCY9Y-xqGATi9oHWhZqc89rZ7yO4QowHb-HBNJrCcCF4yfTq90zC85UNms0VTi7kbIBZDCPq5NsgPBtKdnaaIMfw21xLdi2hUsHr-vEER0C5LckFW6EU_"/>
+<div class="absolute top-3 right-3 w-6 h-6 border-2 border-white/50 rounded-full opacity-0 group-hover:opacity-100"></div>
+</div>
+</div>
+</main>
+<!-- Selection Summary Overlay -->
+<div class="fixed bottom-20 right-8 left-[calc(var(--sidebar-width)+24px)] pointer-events-none">
+<div class="flex justify-center">
+<div class="bg-surface-container-highest/90 backdrop-blur-xl border border-outline-variant px-6 py-3 rounded-full shadow-2xl flex items-center gap-6 pointer-events-auto animate-bounce-subtle">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold text-title-sm">15</span>
+<span class="font-title-sm text-title-sm text-on-surface">total items selected</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant"></div>
+<button class="text-on-surface-variant hover:text-primary transition-all font-label-caps text-label-caps uppercase">Clear Selection</button>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Shell -->
+<footer class="fixed bottom-0 right-0 left-sidebar-width h-16 w-[calc(100%-var(--sidebar-width))] border-t border-outline-variant bg-surface-container-highest flex justify-end items-center px-8 gap-4 z-50">
+<button class="text-on-surface-variant border border-outline-variant rounded-xl px-6 py-2 flex items-center gap-2 font-label-caps text-label-caps hover:brightness-110 transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+            Back
+        </button>
+<button class="bg-primary text-on-primary rounded-xl px-6 py-2 flex items-center gap-2 font-label-caps text-label-caps hover:brightness-110 transition-all active:scale-95">
+            Next: Generate Collage
+            <span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</button>
+</footer>
+<script>
+        function toggleSelect(el) {
+            const isSelected = el.classList.contains('white-border-frame');
+            
+            if (isSelected) {
+                el.classList.remove('white-border-frame');
+                const overlay = el.querySelector('.bg-primary\\/20');
+                if (overlay) overlay.remove();
+                const check = el.querySelector('.bg-primary');
+                if (check) {
+                    check.classList.remove('bg-primary', 'text-on-primary');
+                    check.classList.add('border-2', 'border-white/50', 'opacity-0');
+                    check.innerHTML = '';
+                }
+            } else {
+                el.classList.add('white-border-frame');
+                const overlay = document.createElement('div');
+                overlay.className = 'absolute inset-0 bg-primary/20 pointer-events-none';
+                el.appendChild(overlay);
+                
+                const checkContainer = el.querySelector('.w-6.h-6');
+                checkContainer.classList.remove('border-2', 'border-white/50', 'opacity-0');
+                checkContainer.classList.add('bg-primary', 'text-on-primary', 'z-10');
+                checkContainer.innerHTML = '<span class="material-symbols-outlined text-[16px] font-bold">check</span>';
+            }
+        }
+    </script>
+<style>
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-bounce-subtle {
+            animation: bounce-subtle 3s ease-in-out infinite;
+        }
+    </style>
+</body></html>

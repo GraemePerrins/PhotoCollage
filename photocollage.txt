@@ -1,0 +1,35 @@
+create a ux design for a desktop flutter linux app that creates custom photo collages from a selection of images.
+the user workflow will be like:
+* select from a set of pre-existing collage templates
+* choose the size and orientation of the collage output 
+* select a range of images from the user google photos account
+* then generate a collage using the selected images applied to the selected template style and chosen collage size and orientation
+* a progress bar should be shown reflecting collage production reflecting percentage of images processed 
+
+The generated collages will combine, place, overlay and re-scale the images to allow the majority of the images to be shown within the collage output. Images may be cropped at borders, partially overlaid with other images, re-scaled to fit more images per collage and images arranged in different orientations such that the overall resulting collage will show the majority of the selected images. 
+
+Once a collage is generated the app will provide a re-generate option to re-generated the selected collage processing the images again to the selected collage template to generate a new collage.
+Once a collage is generated the user can select a single image within the collage and then select another image on the collage to swap the images between positions.
+Once collage is generated it can be saved as a single image to file.
+
+
+The app should also have  a configuration and settings menu where the user can select:
+* setup google photos account linkage
+* set output folder for collages
+* set default collage output size and orientation
+* set white border on, off default and set border size in mm
+
+The templated collage styles will include:
+* basic collage: images are arranged in a grid with images scaled to fit within the collage size. Images are not rotated. Option to have images surrounded with a white border frame.
+
+* random collage: images are randomly arranged within the collage. images may overlap with larger images behind smaller. images maybe rotated to different orientations. images are re-scaled to fit majority of images within the collage size. Option to have images surrounded with a white border frame.
+
+* throw down: images are randomly selected and placed on the collage like throwing images on a table. images will overlap, images can be rotated to orientations. Images are re-scaled to fit majority of images within the collage. Images maybe cropped at collage borders. Option to have images surrounded with a white border frame.
+
+* circular:images are randomly selected and placed on the collage in circular spiral pattern from the centre and spirals outward in circular pattern to the edge of the collage. images will overlap, images can be rotated to orientations. Images are re-scaled to fit majority of images within the collage. Images maybe cropped at collage borders. Option to have images surrounded with a white border frame.
+
+titled: images are arranged in a grid with images scaled to fit within the collage size. Images are not rotated. Images are at different sizes in proportion to the original image size. The collage looks like a tiled image of different sizes. Option to have images surrounded with a white border frame.
+
+
+
+
