@@ -9,3 +9,5 @@ Local Folder Management: Load folders from your local machine to keep a persiste
 Intelligent Layout Templates: Choose from creative layout templates including structured Grids, overlapping Random Collages, organic Throw Downs, and mathematical Circular Spirals.
 Interactive Fine-Tuning: Easily swap image positions with a click to balance colors and compositions, or instantly re-generate/shuffle layouts.
 Print & Export Ready: Full control over canvas dimensions, landscape/portrait orientation, and margins/border sizing.
+
+Built with Google AntiGravity as a Flutter Linux Desktop App
