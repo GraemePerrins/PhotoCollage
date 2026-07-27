@@ -10,4 +10,6 @@ Intelligent Layout Templates: Choose from creative layout templates including st
 Interactive Fine-Tuning: Easily swap image positions with a click to balance colors and compositions, or instantly re-generate/shuffle layouts.
 Print & Export Ready: Full control over canvas dimensions, landscape/portrait orientation, and margins/border sizing.
 
+See example collages in the SampleCollages folder.
+
 Built with Google AntiGravity as a Flutter Linux Desktop App
