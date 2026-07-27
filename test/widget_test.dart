@@ -18,7 +18,7 @@ void main() {
     await tester.pumpWidget(const CollageStudioApp());
 
     // Verify that the title is displayed.
-    expect(find.text('CollageStudio'), findsOneWidget);
+    expect(find.text('Collage Studio'), findsOneWidget);
 
     // Verify navigation tabs.
     expect(find.text('Templates'), findsOneWidget);
