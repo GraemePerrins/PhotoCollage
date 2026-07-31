@@ -1,17 +1,15 @@
-# photocollage
+# Photo Collage
 
-A new Flutter project.
+Collage Studio is a sleek, native desktop application built with Flutter for creating custom photo collages from local image directories. 
 
-## Getting Started
+Users can load folders of photos, selectively pick images, choose a dynamic collage template (such as grids, overlapping layers, or spirals), and customize the canvas size and orientation. Once generated, the app supports interactive post-generation editing—allowing users to easily swap image positions or shuffle the layout—before saving the collage as a single high-resolution image to their output directory.
 
-This project is a starting point for a Flutter application.
+Key Features (Refined for Local Folder Use):
+Local Folder Management: Load folders from your local machine to keep a persistent library of photos ready to compose.
+Intelligent Layout Templates: Choose from creative layout templates including structured Grids, overlapping Random Collages, organic Throw Downs, and mathematical Circular Spirals.
+Interactive Fine-Tuning: Easily swap image positions with a click to balance colors and compositions, or instantly re-generate/shuffle layouts.
+Print & Export Ready: Full control over canvas dimensions, landscape/portrait orientation, and margins/border sizing.
 
-A few resources to get you started if this is your first Flutter project:
+See example collages in the SampleCollages folder.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Built with Google AntiGravity as a Flutter Linux Desktop App
