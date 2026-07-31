@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import '../engine/collage_models.dart';
@@ -48,6 +49,125 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
     super.dispose();
   }
 
+  /// Fast binary header-based size reader for JPEG, PNG, WebP, and BMP images.
+  /// Runs in microseconds without decoding pixel buffers into memory.
+  Future<Size> _getImageSizeFromHeader(String path) async {
+    if (_sizeCache.containsKey(path)) {
+      return _sizeCache[path]!;
+    }
+    try {
+      final file = File(path);
+      final length = await file.length();
+      if (length < 30) return const Size(800.0, 600.0);
+
+      final randomAccess = await file.open(mode: FileMode.read);
+      try {
+        final bytes = await randomAccess.read(min(1024, length));
+        if (bytes.length >= 24) {
+          // PNG: 89 50 4E 47 0D 0A 1A 0A
+          if (bytes[0] == 0x89 &&
+              bytes[1] == 0x50 &&
+              bytes[2] == 0x4E &&
+              bytes[3] == 0x47) {
+            final width = (bytes[16] << 24) |
+                (bytes[17] << 16) |
+                (bytes[18] << 8) |
+                bytes[19];
+            final height = (bytes[20] << 24) |
+                (bytes[21] << 16) |
+                (bytes[22] << 8) |
+                bytes[23];
+            if (width > 0 && height > 0) {
+              return Size(width.toDouble(), height.toDouble());
+            }
+          }
+
+          // BMP: 42 4D ('BM')
+          if (bytes[0] == 0x42 && bytes[1] == 0x4D && bytes.length >= 26) {
+            final width = bytes[18] |
+                (bytes[19] << 8) |
+                (bytes[20] << 16) |
+                (bytes[21] << 24);
+            final height = (bytes[22] |
+                    (bytes[23] << 8) |
+                    (bytes[24] << 16) |
+                    (bytes[25] << 24))
+                .abs();
+            if (width > 0 && height > 0) {
+              return Size(width.toDouble(), height.toDouble());
+            }
+          }
+
+          // WebP: RIFF .... WEBP
+          if (bytes[0] == 0x52 &&
+              bytes[1] == 0x49 &&
+              bytes[2] == 0x46 &&
+              bytes[3] == 0x46 &&
+              bytes[8] == 0x57 &&
+              bytes[9] == 0x45 &&
+              bytes[10] == 0x42 &&
+              bytes[11] == 0x50 &&
+              bytes.length >= 30) {
+            final chunkType = String.fromCharCodes(bytes.sublist(12, 16));
+            if (chunkType == 'VP8X' && bytes.length >= 30) {
+              final w = 1 + (bytes[24] | (bytes[25] << 8) | (bytes[26] << 16));
+              final h = 1 + (bytes[27] | (bytes[28] << 8) | (bytes[29] << 16));
+              return Size(w.toDouble(), h.toDouble());
+            } else if (chunkType == 'VP8 ' && bytes.length >= 30) {
+              final w = (bytes[26] | (bytes[27] << 8)) & 0x3FFF;
+              final h = (bytes[28] | (bytes[29] << 8)) & 0x3FFF;
+              return Size(w.toDouble(), h.toDouble());
+            } else if (chunkType == 'VP8L' && bytes.length >= 25) {
+              final w = 1 + ((bytes[21] | ((bytes[22] & 0x3F) << 8)));
+              final h = 1 +
+                  (((bytes[22] >> 6) |
+                      (bytes[23] << 2) |
+                      ((bytes[24] & 0x03) << 10)));
+              return Size(w.toDouble(), h.toDouble());
+            }
+          }
+
+          // JPEG: FF D8 FF
+          if (bytes[0] == 0xFF && bytes[1] == 0xD8) {
+            int offset = 2;
+            while (offset < bytes.length - 8) {
+              if (bytes[offset] != 0xFF) {
+                offset++;
+                continue;
+              }
+              final marker = bytes[offset + 1];
+              // SOF0..SOF3, SOF5..SOF7, SOF9..SOF11, SOF13..SOF15
+              if ((marker >= 0xC0 && marker <= 0xC3) ||
+                  (marker >= 0xC5 && marker <= 0xC7) ||
+                  (marker >= 0xC9 && marker <= 0xCB) ||
+                  (marker >= 0xCD && marker <= 0xCF)) {
+                if (offset + 8 < bytes.length) {
+                  final height = (bytes[offset + 5] << 8) | bytes[offset + 6];
+                  final width = (bytes[offset + 7] << 8) | bytes[offset + 8];
+                  if (width > 0 && height > 0) {
+                    return Size(width.toDouble(), height.toDouble());
+                  }
+                }
+                break;
+              } else {
+                if (offset + 3 < bytes.length) {
+                  final blockLength =
+                      (bytes[offset + 2] << 8) | bytes[offset + 3];
+                  offset += 2 + blockLength;
+                } else {
+                  break;
+                }
+              }
+            }
+          }
+        }
+      } finally {
+        await randomAccess.close();
+      }
+    } catch (_) {}
+    return const Size(800.0, 600.0);
+  }
+
   Future<void> _loadSavedFolders() async {
     setState(() => _isLoading = true);
     _loadingGeneration++;
@@ -55,12 +175,14 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
     final saved = _settings.getSelectedFolders();
     _selectedFolderPaths = List.from(saved);
 
+    final Map<String, List<PhotoItem>> loadedFolderItems = {};
+
     for (var path in _selectedFolderPaths) {
       if (currentGen != _loadingGeneration) return;
       final dir = Directory(path);
-      if (dir.existsSync()) {
+      if (await dir.exists()) {
         try {
-          final list = dir.listSync();
+          final List<FileSystemEntity> list = await dir.list().toList();
           final List<File> files = [];
           for (var entity in list) {
             if (currentGen != _loadingGeneration) return;
@@ -81,26 +203,29 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
           for (var file in files) {
             if (currentGen != _loadingGeneration) return;
             final filename = file.path.split(Platform.pathSeparator).last;
+            final size = await _getImageSizeFromHeader(file.path);
+            _sizeCache[file.path] = size;
+
             items.add(PhotoItem(
               id: file.path,
               url: file.path,
               title: filename,
               albumId: path,
               isLocal: true,
+              width: size.width,
+              height: size.height,
             ));
           }
-          _folderItems[path] = items;
-
-          // Asynchronously resolve image sizes
-          for (var item in items) {
-            if (currentGen != _loadingGeneration) return;
-            _resolveImageSize(item, currentGen);
-          }
+          loadedFolderItems[path] = items;
         } catch (_) {}
       }
     }
-    if (currentGen == _loadingGeneration) {
-      setState(() => _isLoading = false);
+    if (currentGen == _loadingGeneration && mounted) {
+      setState(() {
+        _folderItems.clear();
+        _folderItems.addAll(loadedFolderItems);
+        _isLoading = false;
+      });
     }
   }
 
@@ -108,6 +233,7 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
     try {
       final String? selectedDirectory = await FilePicker.getDirectoryPath();
       if (selectedDirectory != null) {
+        if (!mounted) return;
         if (_selectedFolderPaths.contains(selectedDirectory)) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -128,8 +254,8 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
 
         final dir = Directory(selectedDirectory);
         final List<File> files = [];
-        if (dir.existsSync()) {
-          final list = dir.listSync();
+        if (await dir.exists()) {
+          final list = await dir.list().toList();
           for (var entity in list) {
             if (currentGen != _loadingGeneration) return;
             if (entity is File) {
@@ -151,16 +277,21 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
         for (var file in files) {
           if (currentGen != _loadingGeneration) return;
           final filename = file.path.split(Platform.pathSeparator).last;
+          final size = await _getImageSizeFromHeader(file.path);
+          _sizeCache[file.path] = size;
+
           items.add(PhotoItem(
             id: file.path,
             url: file.path,
             title: filename,
             albumId: selectedDirectory,
             isLocal: true,
+            width: size.width,
+            height: size.height,
           ));
         }
 
-        if (currentGen != _loadingGeneration) return;
+        if (currentGen != _loadingGeneration || !mounted) return;
 
         setState(() {
           _selectedFolderPaths.add(selectedDirectory);
@@ -169,15 +300,11 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
         });
 
         await _settings.setSelectedFolders(_selectedFolderPaths);
-
-        for (var item in items) {
-          if (currentGen != _loadingGeneration) return;
-          _resolveImageSize(item, currentGen);
-        }
       }
-    } catch (e) {
-      setState(() => _isLoading = false);
-      print('Error picking directory: $e');
+    } catch (_) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -202,64 +329,6 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
     });
     _settings.setSelectedFolders([]);
     widget.onPhotosChanged([]);
-  }
-
-  Future<void> _resolveImageSize(PhotoItem item, int generation) async {
-    if (generation != _loadingGeneration) return;
-
-    if (_sizeCache.containsKey(item.url)) {
-      final size = _sizeCache[item.url]!;
-      _updateItemSize(item, size.width, size.height, generation);
-      return;
-    }
-
-    try {
-      final completer = Completer<Size>();
-      final fileImage = FileImage(File(item.url));
-      final stream = fileImage.resolve(const ImageConfiguration());
-      late ImageStreamListener listener;
-      listener = ImageStreamListener(
-        (ImageInfo info, bool _) {
-          completer.complete(Size(info.image.width.toDouble(), info.image.height.toDouble()));
-          stream.removeListener(listener);
-        },
-        onError: (exception, stackTrace) {
-          completer.complete(const Size(800.0, 600.0));
-          stream.removeListener(listener);
-        },
-      );
-      stream.addListener(listener);
-      final size = await completer.future;
-
-      if (generation != _loadingGeneration) return;
-
-      _sizeCache[item.url] = size;
-      _updateItemSize(item, size.width, size.height, generation);
-    } catch (_) {
-      if (generation != _loadingGeneration) return;
-      _sizeCache[item.url] = const Size(800.0, 600.0);
-      _updateItemSize(item, 800.0, 600.0, generation);
-    }
-  }
-
-  void _updateItemSize(PhotoItem item, double width, double height, int generation) {
-    if (!mounted) return;
-    if (generation != _loadingGeneration) return;
-    setState(() {
-      final list = _folderItems[item.albumId];
-      if (list != null) {
-        final index = list.indexWhere((e) => e.url == item.url);
-        if (index >= 0) {
-          list[index] = list[index].copyWith(width: width, height: height);
-        }
-      }
-      final selectedIndex = widget.selectedPhotos.indexWhere((e) => e.url == item.url);
-      if (selectedIndex >= 0) {
-        final updated = List<PhotoItem>.from(widget.selectedPhotos);
-        updated[selectedIndex] = updated[selectedIndex].copyWith(width: width, height: height);
-        widget.onPhotosChanged(updated);
-      }
-    });
   }
 
   void _togglePhotoSelection(PhotoItem photo) {
@@ -312,70 +381,10 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Title Header with Action Buttons
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Image Library',
-                  style: TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -0.96,
-                    color: StitchTheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Select folders containing photos from your device to compose your collage.',
-                  style: TextStyle(color: StitchTheme.onSurfaceVariant),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                if (widget.selectedPhotos.isNotEmpty) ...[
-                  TextButton.icon(
-                    onPressed: () => widget.onPhotosChanged([]),
-                    icon: const Icon(Icons.deselect, size: 16, color: StitchTheme.onSurfaceVariant),
-                    label: const Text('Deselect Images', style: TextStyle(color: StitchTheme.onSurfaceVariant)),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                ],
-                if (_selectedFolderPaths.isNotEmpty) ...[
-                  TextButton.icon(
-                    onPressed: _clearAllFolders,
-                    icon: const Icon(Icons.clear_all, size: 16, color: StitchTheme.error),
-                    label: const Text('Clear All', style: TextStyle(color: StitchTheme.error)),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                ],
-                ElevatedButton.icon(
-                  onPressed: _addLocalFolder,
-                  icon: const Icon(Icons.create_new_folder_outlined, size: 16, color: StitchTheme.onPrimary),
-                  label: const Text('Add Folder'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: StitchTheme.primary,
-                    foregroundColor: StitchTheme.onPrimary,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+        _buildTopHeader(),
         const SizedBox(height: 24),
 
-        // Folders List / Empty State
+        // Virtualized Slivers Workspace
         Expanded(
           child: _isLoading
               ? const Center(
@@ -383,18 +392,80 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
                 )
               : _selectedFolderPaths.isEmpty
                   ? _buildEmptyState()
-                  : ListView.builder(
-                      itemCount: _selectedFolderPaths.length,
-                      itemBuilder: (context, index) {
-                        final path = _selectedFolderPaths[index];
-                        final items = _folderItems[path] ?? [];
-                        return _buildFolderSection(path, items);
-                      },
+                  : CustomScrollView(
+                      slivers: [
+                        for (var folderPath in _selectedFolderPaths)
+                          ..._buildFolderSlivers(folderPath),
+                      ],
                     ),
         ),
 
         // Horizontal scrollable tray of selected images
         _buildSelectedImagesTray(),
+      ],
+    );
+  }
+
+  Widget _buildTopHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Image Library',
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.96,
+                color: StitchTheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Select folders containing photos from your device to compose your collage.',
+              style: TextStyle(color: StitchTheme.onSurfaceVariant),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            if (widget.selectedPhotos.isNotEmpty) ...[
+              TextButton.icon(
+                onPressed: () => widget.onPhotosChanged([]),
+                icon: const Icon(Icons.deselect, size: 16, color: StitchTheme.onSurfaceVariant),
+                label: const Text('Deselect Images', style: TextStyle(color: StitchTheme.onSurfaceVariant)),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                ),
+              ),
+              const SizedBox(width: 12),
+            ],
+            if (_selectedFolderPaths.isNotEmpty) ...[
+              TextButton.icon(
+                onPressed: _clearAllFolders,
+                icon: const Icon(Icons.clear_all, size: 16, color: StitchTheme.error),
+                label: const Text('Clear All', style: TextStyle(color: StitchTheme.error)),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                ),
+              ),
+              const SizedBox(width: 12),
+            ],
+            ElevatedButton.icon(
+              onPressed: _addLocalFolder,
+              icon: const Icon(Icons.create_new_folder_outlined, size: 16, color: StitchTheme.onPrimary),
+              label: const Text('Add Folder'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: StitchTheme.primary,
+                foregroundColor: StitchTheme.onPrimary,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -446,25 +517,27 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
     );
   }
 
-  Widget _buildFolderSection(String folderPath, List<PhotoItem> items) {
+  List<Widget> _buildFolderSlivers(String folderPath) {
     final folderName = folderPath.split(Platform.pathSeparator).last;
+    final items = _folderItems[folderPath] ?? [];
     final allSelected = _isFolderAllSelected(folderPath);
     final isCollapsed = _collapsedFolders.contains(folderPath);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 24),
-      decoration: BoxDecoration(
-        color: StitchTheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: StitchTheme.outlineVariant),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section Header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 16, 16, 16),
+    return [
+      // Folder Section Header Card
+      SliverToBoxAdapter(
+        child: Container(
+          margin: EdgeInsets.only(top: 16, bottom: isCollapsed ? 16 : 0),
+          decoration: BoxDecoration(
+            color: StitchTheme.surfaceContainerLowest,
+            borderRadius: BorderRadius.vertical(
+              top: const Radius.circular(12),
+              bottom: Radius.circular(isCollapsed ? 12 : 0),
+            ),
+            border: Border.all(color: StitchTheme.outlineVariant),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 12, 16, 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -525,43 +598,53 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
               ],
             ),
           ),
-          if (!isCollapsed) ...[
-            const Divider(height: 1, color: StitchTheme.outlineVariant),
-
-            // Images Grid
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: items.isEmpty
-                  ? const Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 24),
-                        child: Text(
-                          'No image files found in this folder.',
-                          style: TextStyle(color: StitchTheme.onSurfaceVariant),
-                        ),
-                      ),
-                    )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 8,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 1.0,
-                      ),
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        final item = items[index];
-                        final isSelected = widget.selectedPhotos.any((p) => p.url == item.url);
-                        return _buildImageTile(item, isSelected);
-                      },
-                    ),
-            ),
-          ],
-        ],
+        ),
       ),
-    );
+
+      if (!isCollapsed)
+        if (items.isEmpty)
+          SliverToBoxAdapter(
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              decoration: const BoxDecoration(
+                color: StitchTheme.surfaceContainerLowest,
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                border: Border(
+                  left: BorderSide(color: StitchTheme.outlineVariant),
+                  right: BorderSide(color: StitchTheme.outlineVariant),
+                  bottom: BorderSide(color: StitchTheme.outlineVariant),
+                ),
+              ),
+              child: const Center(
+                child: Text(
+                  'No image files found in this folder.',
+                  style: TextStyle(color: StitchTheme.onSurfaceVariant),
+                ),
+              ),
+            ),
+          )
+        else
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 24),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 8,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1.0,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final item = items[index];
+                  final isSelected = widget.selectedPhotos.any((p) => p.url == item.url);
+                  return _buildImageTile(item, isSelected);
+                },
+                childCount: items.length,
+              ),
+            ),
+          ),
+    ];
   }
 
   Widget _buildImageTile(PhotoItem item, bool isSelected) {
@@ -583,7 +666,9 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
               child: Image.file(
                 File(item.url),
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => Container(
+                cacheWidth: 300,
+                cacheHeight: 300,
+                errorBuilder: (_, _, _) => Container(
                   color: StitchTheme.surfaceContainerLow,
                   child: const Icon(Icons.broken_image, color: StitchTheme.outline),
                 ),
@@ -591,7 +676,7 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
             ),
             if (isSelected) ...[
               Positioned.fill(
-                child: Container(color: StitchTheme.primaryContainer.withOpacity(0.2)),
+                child: Container(color: StitchTheme.primaryContainer.withValues(alpha: 0.2)),
               ),
               Positioned(
                 top: 6,
@@ -615,7 +700,7 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
                   height: 18,
                   decoration: BoxDecoration(
                     color: Colors.black26,
-                    border: Border.all(color: Colors.white.withOpacity(0.5)),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -708,7 +793,9 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
                             child: Image.file(
                               File(photo.url),
                               fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) => Container(
+                              cacheWidth: 150,
+                              cacheHeight: 150,
+                              errorBuilder: (_, _, _) => Container(
                                 color: StitchTheme.surfaceContainerHigh,
                                 child: const Icon(Icons.broken_image, size: 20, color: StitchTheme.outline),
                               ),
